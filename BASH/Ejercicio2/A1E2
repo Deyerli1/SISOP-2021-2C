@@ -1,6 +1,13 @@
 #!/bin/bash
 
 
+# Actividad Pactica de Laboratorio Nro. 1 - Ejercicio 2
+# Fierro, Agustin Gabriel- 42.427.695
+# Albanesi, Matias - 39.770.388
+# Rodriguez, Ezequiel Nicolás - 40.135.570
+# Jimenez Vitale, Matias - 34.799.834
+# Cambiasso, Tomas - 41.471.465
+
 traduccion(){
 	case $1 in
 		1)
