@@ -1,13 +1,6 @@
 #!/bin/bash
 
 
-# Actividad Pactica de Laboratorio Nro. 1 - Ejercicio 2
-# Fierro, Agustin Gabriel- 42.427.695
-# Albanesi, Matias - 39.770.388
-# Rodriguez, Ezequiel Nicolás - 40.135.570
-# Jimenez Vitale, Matias - 34.799.834
-# Cambiasso, Tomas - 41.471.465
-
 traduccion(){
 	case $1 in
 		1)
@@ -80,16 +73,6 @@ DIACHECK=0
 while [[ $# -gt 0 ]]; do
 	key="$1"
 	case $key in
-	-k)
-		if [[ $QANT -gt 1 ]];	then
-			echo -e "${RED}Error, Demasiados parametros para ejecutar $1"
-			exit 1
-		fi
-		line=$(head -n 1 ".APL1E3PIDlog")
-		kill $line
-		rm ".APL1E3PIDlog"
-		exit 1
-	;;
 	-p|--path)
 		if [[ -z $2 ]]; then
 			echo -e "${RED}Error, Por favor ingrese un directorio junto con $1"
@@ -129,22 +112,13 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-if [[ -e ".APL1E3PIDlog" ]]; then
-		echo -e "${RED}Error, El script ya esta en ejecución"
-		exit 1
-	else
-		PID=$$
-		PID=$(($PID+1))
-		echo "$PID" >> ".APL1E3PIDlog"
-fi
-
-
 
 for filename in $PATH/*;do
 	tiempo="Almuerzo"	
 	
 	aux="${filename%.*}"
 	aux="${aux##*/}"
+
 	if echo "$aux" | /bin/grep 'del' >/dev/null; then
 		continue
 	fi	
@@ -155,11 +129,11 @@ for filename in $PATH/*;do
 	dow=$(/bin/date --date "$yer-$mes-$dia" +%u)
 	dow=${dow^^}
 	dow=$(traduccion $dow)
-	
+
 	if [[ DIACHECK -eq 1 && ${dow^^} == $DIA ]];then
-		continue
+			continue
 	fi
-	
+
 	hora=${aux:9:2}
 	minuto=${aux:11:2}
 	segundo=${aux:13:2}
@@ -168,7 +142,7 @@ for filename in $PATH/*;do
 	elif [[ $(( $hora*3600 + $minuto*60 + $segundo )) -lt 39600 ]];then
 		tiempo="Desayuno"
 	fi
-	
 	res="$dia-$mes-$yer $tiempo del $dow"
 	/bin/mv "$filename" "$PATH/$res.${filename##*.}" 
 done
+
