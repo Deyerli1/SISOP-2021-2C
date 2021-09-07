@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Actividad Pactica de Laboratorio Nro. 1 - Ejercicio 3
-# Fierro, Agustin Gabriel- 42.427.695
-# Albanesi, Matias - 39.770.388
-# Rodriguez, Ezequiel Nicolás - 40.135.570
-# Jimenez Vitale, Matias - 34.799.834
-# Cambiasso, Tomas - 41.471.465
 
 traduccion(){
 	case $1 in
@@ -168,6 +162,8 @@ daemon(){
 			segundo=${aux:13:2}
 			if [[ $(( $hora*3600 + $minuto*60 + $segundo )) -gt 68400 ]];then
 				tiempo="Cena"
+			elif [[ $(( $hora*3600 + $minuto*60 + $segundo )) -lt 39600 ]];then
+				tiempo="Desayuno"
 			fi
 			
 			res="$dia-$mes-$yer $tiempo del $dow"
