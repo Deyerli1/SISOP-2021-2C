@@ -60,7 +60,7 @@ sucursales="$(basename $2)"
 #echo "$sucursales"
 
 result=""
-files=`ls $sucursales/*.csv`
+files=`find "$sucursales" -iname '*.csv'`
 for filename in $files
 do
     #echo $filename
