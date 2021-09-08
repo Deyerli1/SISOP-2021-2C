@@ -3,25 +3,25 @@
 
 traduccion(){
 	case $1 in
-		MONDAY)
+		1)
 			echo lunes
 		;;
-		TUESDAY)
+		2)
 			echo martes
 		;;
-		WEDNESDAY)
+		3)
 			echo miercoles
 		;;
-		THURSDAY)
+		4)
 			echo jueves
 		;;
-		FRIDAY)
+		5)
 			echo viernes
 		;;
-		SATURDAY)
+		6)
 			echo sabado
 		;;
-		SUNDAY)
+		7)
 			echo domingo
 		;;
 	esac
@@ -148,7 +148,7 @@ daemon(){
 			mes=${aux:4:2}
 			dia=${aux:6:2}
 		
-			dow=$(/bin/date --date "$yer-$mes-$dia" +%A)
+			dow=$(/bin/date --date "$yer-$mes-$dia" +%u)
 			dow=${dow^^}
 			dow=$(traduccion $dow)
 		
@@ -162,6 +162,8 @@ daemon(){
 			segundo=${aux:13:2}
 			if [[ $(( $hora*3600 + $minuto*60 + $segundo )) -gt 68400 ]];then
 				tiempo="Cena"
+			elif [[ $(( $hora*3600 + $minuto*60 + $segundo )) -lt 39600 ]];then
+				tiempo="Desayuno"
 			fi
 			
 			res="$dia-$mes-$yer $tiempo del $dow"
