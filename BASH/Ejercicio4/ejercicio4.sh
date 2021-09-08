@@ -1,20 +1,11 @@
 #!/bin/bash
 
-# echo "prueba"
-
-# ./ejercicio4.sh -d ./ejemplos -e "Moron" -o ./dirSalida
-# ./ejercicio4.sh -d ./ejemplos -o ./dirSalida
-
-#echo "$2"
-#echo "$4"
-#echo "$6"
-
-#echo "Cantidad de parametros: $#"
-
-#source ./jsonhelper.sh
-
-#sudo apt-get install jq
-#clear
+# Actividad Practica de Laboratorio Nro. 1 - Ejercicio 5
+# Fierro, Agustin Gabriel- 42.427.695
+# Albanesi, Matias - 39.770.388
+# Rodriguez, Ezequiel Nicolás - 40.135.570
+# Jimenez Vitale, Matias - 34.799.834
+# Cambiasso, Tomas - 41.471.465
 
 function ayuda() {
 	echo "Este script sirve para recopilar la información de las distintas sucursales, generando un resumen en un archivo JSON llamado “salida.json”."
@@ -26,7 +17,6 @@ function ayuda() {
 	echo
 	echo "ej: ./ejercicio4.sh -d ./ejemplos -e ""Moron"" -o ./dirSalida"
 	echo "ej: ./ejercicio4.sh -d ./ejemplos -o ./dirSalida"
-
 }
 
 if [[ $1 == "-h" || $1 == "-help" ]] ; then
