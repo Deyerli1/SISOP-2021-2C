@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Actividad Practica de Laboratorio Nro. 1 - Ejercicio 5
+# Actividad Práctica de Laboratorio Nro. 1 - Ejercicio 4
 # Fierro, Agustin Gabriel- 42.427.695
 # Albanesi, Matias - 39.770.388
 # Rodriguez, Ezequiel Nicolás - 40.135.570
