@@ -48,15 +48,7 @@ mensaje_ayuda(){
 	Los valores posibles para este parámetro son los nombres de los días de la semana (sin 
 	tildes). El script tiene que funcionar correctamente sin importar si el nombre del día está en
 	minúsculas o mayúsculas.
-	•• -d: Otra manera de nombrar a --dia. Se debe usar uno u otro
-	• Como es una mejora sobre el script anterior, al ejecutarlo debe seguir renombrando los
-	archivos existentes antes de quedar en modo monitoreo.
-	• Durante el monitoreo, se debe devolver la terminal al usuario, es decir, el script debe correr
-	en segundo plano como proceso demonio y no bloquear la terminal.
-	• No se debe permitir la ejecución de más de una instancia del script al mismo tiempo.
-	Para poder finalizar la ejecución del script, se debe agregar un parámetro “-k” que detendrá la
-	ejecución del demonio. Se debe validar que este parámetro no se ingrese junto con el resto de los
-	parámetros del script."
+	•• -d: Otra manera de nombrar a --dia. Se debe usar uno u otro"
 	exit 1
 }
 
