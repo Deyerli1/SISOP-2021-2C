@@ -49,6 +49,11 @@ fi
 sucursales="$(basename $2)"
 #echo "$sucursales"
 
+if [[ "$sucursales" = "$destdir" ]] ;then
+    echo "El directorio de salida NO puede ser el mismo donde se encuentran los CSV, para evitar que se mezclen archivos"
+    exit 1;
+fi
+
 result=""
 files=`find "$sucursales" -iname '*.csv'`
 for filename in $files
@@ -127,13 +132,3 @@ json+=" }"
 
 destdir=$destdir"/salida.json"
 echo $json > $destdir
-
-# assoc2json() {
-#     declare -n v=$1
-#     printf '%s\0' "${!v[@]}" "${v[@]}" |
-#     jq -Rs 'split("\u0000") | . as $v | (length / 2) as $n | reduce range($n) as $idx ({}; .[$v[$idx]]=$v[$idx+$n])'
-# }
-
-# destdir=$destdir"/salida.json"
-
-# assoc2json arrayFINAL > $destdir
