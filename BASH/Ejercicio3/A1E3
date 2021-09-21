@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# Actividad Práctica de Laboratorio Nro. 1 - Ejercicio 3
-# Fierro, Agustin Gabriel- 42.427.695
-# Albanesi, Matias - 39.770.388
-# Rodriguez, Ezequiel Nicolás - 40.135.570
-# Jimenez Vitale, Matias - 34.799.834
-# Cambiasso, Tomas - 41.471.465
-
 traduccion(){
 	case $1 in
 		1)
@@ -41,9 +34,9 @@ mensaje_ayuda(){
 	utilizando un demonio.
 	Tener en cuenta que:
 	• El script recibe los mismos parámetros que el del ejercicio 2:
-	•• --path: Es el directorio donde se encuentran las imágenes. Tener en cuenta que se deben
+	•• --camino: Es el directorio donde se encuentran las imágenes. Tener en cuenta que se deben
 	renombrar todos los archivos, incluidos los de los subdirectorios.
-	•• -p: Otra manera de nombrar a --path. Se debe usar uno u otro.
+	•• -p: Otra manera de nombrar a --camino. Se debe usar uno u otro.
 	•• --dia: (Opcional) Es el nombre de un día para el cual no se quieren renombrar los archivos.
 	Los valores posibles para este parámetro son los nombres de los días de la semana (sin 
 	tildes). El script tiene que funcionar correctamente sin importar si el nombre del día está en
@@ -64,12 +57,12 @@ QANT=$#
 RED='\033[0;31m'
 
 if [[ $# -gt 4 ]]; then
-	echo -e "${RED}Error, demasiados parametros"
+	echo -e "${RED}ERROR: demasiados parametros"
 	exit 1
 fi
 
 if [[ $# -eq 0 ]]; then
-	echo -e "${RED}Error, ingrese parametros de ejecución (-h para instrucciones)"
+	echo -e "${RED}ERROR: ingrese parametros de ejecución (-h para instrucciones)"
 	exit 1
 fi
 
@@ -81,23 +74,80 @@ while [[ $# -gt 0 ]]; do
 	case $key in
 	-k)
 		if [[ $QANT -gt 1 ]];	then
-			echo -e "${RED}Error, Demasiados parametros para ejecutar $1"
+			echo -e "${RED}ERROR: Demasiados parametros para ejecutar $1"
 			exit 1
 		fi
-		line=$(head -n 1 ".APL1E3PIDlog")
-		kill $line
-		rm ".APL1E3PIDlog"
+		continue=1
+		n=0
+		declare -a arr
+		while read p; do
+				if [[ ! -z "$p" ]];then
+					arr=("${arr[@]}" "$p")
+					((n+=1))
+				fi
+		done <.APL1E3PIDlog
+		while [[ $continue -eq 1 ]]; do
+			echo "[0]Todos"
+			x=1
+			for i in "${arr[@]}"
+			do
+				echo "[$x]$i"
+				((x+=1))
+			done
+
+			echo "Cual proceso desea terminar?:"
+			read option
+			while [[ $option -gt $n || $option -lt 0 ]];do
+				echo "ERROR:Opción inválida, intente de nuevo:"
+				read option
+			done
+			clear
+			if [[ $option -eq 0 ]];then
+				rm ".APL1E3PIDlog"
+				pkill -f A1E3
+				exit 1
+			else
+				((option-=1))
+				process=$(echo ${arr[$option]} | awk '{print $1}')
+				kill $process >/dev/null
+				echo $process "terminado"
+				((n-=1))
+				unset 'arr[$option]'
+				arr=("${arr[@]}")
+				rm ".APL1E3PIDlog"
+				printf "%s\n" "${arr[@]}" > .APL1E3PIDlog
+			fi
+			if [[ $n -eq 0 ]];then
+				echo "No quedan procesos en ejecución"
+				rm ".APL1E3PIDlog"
+				exit
+			fi
+			echo "Quedan $n procesos, continuar?(Y/N): "
+			read option
+			clear
+			while [[ "${option^^}" != @(N|Y) ]];do
+				echo "ERROR:Opcion incorrecta, intente de nuevo: "
+				read option
+			done
+			if [[ "${option^^}" = "N" ]];then
+				if [[ $n -eq 0 ]];then
+					rm ".APL1E3PIDlog"
+				fi
+				exit	
+			fi
+		done
 		exit 1
 	;;
-	-p|--path)
+	-p|--camino)
 		if [[ -z $2 ]]; then
-			echo -e "${RED}Error, Por favor ingrese un directorio junto con $1"
+			echo -e "${RED}ERROR: Por favor ingrese un directorio junto con $1"
 			exit 1
 		fi
 		if [[ -d $2 ]];	then
-			PATH="$2"
+			camino=$2
+			camino="$(realpath $camino)"
 		else
-			echo -e "${RED}Error, El directorio a procesar $2 no existe"
+			echo -e "${RED}ERROR: El directorio a procesar $2 no existe"
 			exit 1	
 		fi
 		shift # past argument
@@ -105,11 +155,11 @@ while [[ $# -gt 0 ]]; do
 	;;
 	-d|--dia)
 		if [[ "${2^^}" != @(DOMINGO|LUNES|MARTES|MIERCOLES|JUEVES|VIERNES|SABADO|MIÉRCOLES|SÁBADO) ]]; then
-			echo -e "${RED}Error, $2 no es un día de la semana"
+			echo -e "${RED}ERROR: $2 no es un día de la semana"
 			exit 1
 		fi
 		if [[ -z $2 ]]; then
-			echo -e "${RED}Error, Por favor ingrese un día de la semana junto con $1"
+			echo -e "${RED}ERROR: Por favor ingrese un día de la semana junto con $1"
 			exit 1
 		fi
 		DIA="${2^^}"
@@ -119,7 +169,7 @@ while [[ $# -gt 0 ]]; do
 	;;
 	-h|-help|-?)
 		if [[ $QANT -gt 1 ]];	then
-			echo -e "${RED}Error, Demasiados parametros para ejecutar $1"
+			echo -e "${RED}ERROR: Demasiados parametros para ejecutar $1"
 			exit 1
 		fi	
 		mensaje_ayuda
@@ -129,18 +179,22 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -e ".APL1E3PIDlog" ]]; then
-		echo -e "${RED}Error, El script ya esta en ejecución"
-		exit 1
-	else
-		PID=$$
-		PID=$(($PID+1))
-		echo "$PID" >> ".APL1E3PIDlog"
+		while read p; do
+			if [[ "$check" == "$camino }" ]];then
+				echo -e "${RED}ERROR: El script ya esta en ejecución para ese directorio"
+				exit 1
+			fi
+		done <.APL1E3PIDlog
 fi
-
 
 daemon(){
 	while true; do
-		for filename in $PATH/*;do
+		while [ -z "$(ls $camino)" ]; do
+			if false; then
+				echo ""
+			fi
+		done
+		for filename in $camino/*;do
 			tiempo="Almuerzo"	
 		
 			aux="${filename%.*}"
@@ -173,9 +227,10 @@ daemon(){
 			fi
 			
 			res="$dia-$mes-$yer $tiempo del $dow"
-			/bin/mv "$filename" "$PATH/$res.${filename##*.}" 
+			/bin/mv "$filename" "$camino/$res.${filename##*.}" 
 		done
 	done
 }
 
 daemon &
+echo "$! $camino" >> ".APL1E3PIDlog"
