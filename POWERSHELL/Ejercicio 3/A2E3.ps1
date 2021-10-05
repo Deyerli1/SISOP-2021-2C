@@ -72,11 +72,6 @@ function schmoving($D1,$D2){
 		$second = $name.Substring(13, 2);
 		$value= (($hour -as [int]) * 3600) + (($minute  -as [int]) * 60) + ($second  -as [int])
 	
-		
-		if($name -Match "del"){
-			return
-		}
-	
 		if($value -lt 39600){
 			$time = "Desayuno"
 		}
