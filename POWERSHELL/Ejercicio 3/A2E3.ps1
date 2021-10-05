@@ -60,7 +60,7 @@ function End-Job {
 
 
 function schmoving($D1,$D2){
-	Get-ChildItem $D1 -File | Foreach-Object {
+	Get-ChildItem -Path $D1 -Exclude *del* -Recurse -File | Foreach-Object {
 		$time = "Almuerzo"
 		$name = $_.Name
 		$ext = $name.Substring($name.LastIndexOf(".")+1)
@@ -123,7 +123,7 @@ function OCD{
 	
 	$pso = new-object psobject -property @{D1 = $global:Hugin; D2 = $global:Munin}
 	$job = Register-ObjectEvent -InputObject $fsw -EventName Created -MessageData $pso -Action {
-			Get-ChildItem $event.MessageData.D1 -File | Foreach-Object {
+			Get-ChildItem -Path $event.MessageData.D1 -Exclude *del* -Recurse -File | Foreach-Object {
 				$time = "Almuerzo"
 				$name = $_.Name
 				$ext = $name.Substring($name.LastIndexOf(".")+1)
