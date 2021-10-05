@@ -45,7 +45,7 @@ function Confirm-Dia{
 }
 
 function OCD($D1,$D2){
-	Get-ChildItem $D1 -File | Foreach-Object {
+	Get-ChildItem -Path $D1 -Exclude *del* -Recurse -File | Foreach-Object {
 		$time = "Almuerzo"
 		$name = $_.Name
 		$ext = $name.Substring($name.LastIndexOf(".")+1)
