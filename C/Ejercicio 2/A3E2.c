@@ -68,16 +68,6 @@ void *servant(void *arg)
 	return 0;
 }
  
-int isNumber(char s[])
-{
-    for (int i = 0; s[i]!= '\0'; i++)
-    {
-        if (isdigit(s[i]) == 0)
-              return 0;
-    }
-    return 1;
-}
-
 int main(int argc,char **argv)
 {
 	if(argc<2){
@@ -89,14 +79,11 @@ int main(int argc,char **argv)
 	}else if(argc>2){
 		printf("ERROR: Demasiados parámetros\n");
 		return 1;
-	}else if(!isNumber(*argv)){
-		printf("ERROR: Parametro no es número\n");
-		return 1;
 	}
 	
 	n=atoi(argv[1]);		
-	if(n<0){
-		printf("ERROR: Cantidad de threads invalido\n");
+	if(n<=0){
+		printf("ERROR: Parámetro inválido\n");
 		return 1;
 	}
 	pthread_t tid[n];
