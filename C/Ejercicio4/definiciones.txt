@@ -1,0 +1,7 @@
+El que hace pan,panadero
+El que hace vidrio,vidriero
+El que hace muebles,carpintero
+El que arregla autos,mecanico
+El que programa,programador
+El que pinta,pintor
+El que hace deporte,deportista
