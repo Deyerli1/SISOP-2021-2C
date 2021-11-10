@@ -182,6 +182,7 @@ int main(int argc, char *argv[])
             write(w, &resultado, sizeof(resultado));
             close(r);
             close(w);
+            fin = true;
         }
 
         //printf("Enviando respuesta ...\n");
