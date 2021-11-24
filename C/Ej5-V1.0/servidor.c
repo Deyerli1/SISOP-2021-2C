@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <netinet/in.h>
+#include <signal.h>
 #define MIN(x,y) (((x)>(y))?(x):(y))
 typedef struct s_nodo
 {
@@ -35,7 +36,7 @@ int colaLlena(const t_cola *cola, unsigned tam);
 int agregarEnCola(t_cola *cola, void *info, unsigned tam);
 int sacarDeCola(t_cola *cola, void *info, unsigned tam);
 int TC_parse(definitions_class* def,char* str);
-
+void handler(int sig);
 
 
 int main(int argc, char const *argv[])
@@ -46,6 +47,7 @@ int main(int argc, char const *argv[])
     char welcome[] = "Por favor, ingresar cantidad de definiciones";
     client_len=sizeof(client_len);
     FILE* defs_ptr;
+    FILE* PIDF;
     definitions_class definitions[50];
     definitions_class tempDefinition;
     char temporal[1075];
@@ -75,6 +77,24 @@ int main(int argc, char const *argv[])
         printf("ERROR: No se pudo abrir el archivo de definiciones\n");
         return 1;
     }
+//// Me fijo que no este corriendo otro servidor
+     PIDF=fopen("/tmp/server_ej5.txt","rt");
+        if(!PIDF)
+        {
+            PIDF=fopen("/tmp/server_ej5.txt","wt");
+            int test=getpid();
+            fprintf(PIDF,"%d\n",test);
+
+        }else
+        {
+            char enTeoriaNoPuedoHacerEsto[10];
+            fgets(enTeoriaNoPuedoHacerEsto,10,PIDF);
+            if(atoi(enTeoriaNoPuedoHacerEsto)!=getpid())
+            {
+                printf("Ya hay un servidor ejecutando\n");
+                return 0;
+            }
+        }
 
     crearCola(&cola);
 //// Parseo el archivo
@@ -88,12 +108,14 @@ int main(int argc, char const *argv[])
     if ((server_ptr = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
         printf("ERROR: No se pudo crear el server\n");
+        fclose(defs_ptr);
         return 1;
     }
 
     if (setsockopt(server_ptr, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)))
     {
         printf("ERROR:No se pudo configurar el server\n");
+        fclose(defs_ptr);
         return 1;
     }
 /// Configuro el server
@@ -106,11 +128,16 @@ int main(int argc, char const *argv[])
     if( bind(server_ptr,(struct sockaddr *)&address,sizeof(address)) )
     {
         printf("ERROR:No se pudo vincular el server\n");
+        fclose(defs_ptr);
         return 1;
     }
     while(1)
     {
         sleep(1);
+        signal(SIGINT, handler);
+        signal(SIGHUP, handler);
+
+
 
         if (listen(server_ptr,3))
         {
@@ -215,6 +242,10 @@ int main(int argc, char const *argv[])
 
     }
 
+        fclose(defs_ptr);
+        fclose(PIDF);
+        unlink("/tmp/server_ej5.txt");
+
 }
 
 
@@ -295,4 +326,11 @@ int sacarDeCola(t_cola *cola, void *info, unsigned tam)
     free(elim);
 
     return 1;
+}
+
+void handler(int sig)
+{
+
+    unlink("/tmp/server_ej5.txt");
+    kill(getpid(), SIGTERM);
 }
