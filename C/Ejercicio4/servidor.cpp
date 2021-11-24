@@ -36,6 +36,8 @@ void handlerSenial(int sig)
         shm_unlink("memoriaFrasesIncorrectas");
         shm_unlink("memoriaHayCliente");
 
+        remove("/tmp/server_ej4.txt");
+
         kill(getpid(), SIGTERM);
     }
 }
@@ -85,6 +87,25 @@ int main()
     int value;
     while (true)
     {
+
+        ifstream PIDF("/tmp/server_ej4.txt");
+        if (!PIDF.is_open())
+        {
+            ofstream PIDF("/tmp/server_ej4.txt");
+            PIDF << getpid() << endl;
+            PIDF.close();
+
+        }else{
+            string pid;
+            getline(PIDF,pid);
+
+            if ( stoi(pid) != getpid()){
+                cout << "Ya hay un proceso ejecutando" << endl;
+                return 0;
+            }
+
+        }        
+
         system("clear");
         cout << "El pid para detener el servidor es: " << getpid() << endl;
         while (sem_wait(semaforoCliente) < 0)
@@ -267,6 +288,8 @@ int main()
         *memoriaHayCliente = 'F';
         sem_post(semaforo1);
     }
+
+    remove("/tmp/server_ej4.txt");
 
     return EXIT_SUCCESS;
 }
