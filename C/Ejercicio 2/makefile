@@ -1,5 +1,5 @@
 All:
-	gcc threads.c -o thread -pthread
+	gcc A3E2.c -o A3E2 -pthread
 Thread:
-	gcc threads.c -o thread -pthread
+	gcc A3E2.c -o A3E2 -pthread
 
